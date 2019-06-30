@@ -7,10 +7,13 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "ts-loader"
+          loader: "awesome-typescript-loader"
         }
       } 
     ]
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
   },
   context: __dirname + "/client/",
 	entry: "./app.tsx",
