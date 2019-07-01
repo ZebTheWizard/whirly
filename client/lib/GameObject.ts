@@ -31,5 +31,10 @@ export class GameObject
       throw new Error("GameObject not drawable.")
     }
 
+    public clear(ctx:CanvasRenderingContext2D) {
+      // ctx.clearRect(0,0, 100,100)
+      ctx.clearRect(this.position.value('x'), this.position.value('y'), this.width, this.height)
+    }
+
     public update(){}
 }

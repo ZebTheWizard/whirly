@@ -12,21 +12,23 @@ export class Player extends Moveable(Rotateable(GameBlock)) {
   }
 
   update () {
-    if (this.keys.ArrowLeft) {
-      this.rotate(2 * Math.PI/180)
+    if (this.world.rotationMode == "keyboard") {
+      if (this.keys.ArrowLeft) {
+        this.rotate(2 * Math.PI/180)
+      }
+      if (this.keys.ArrowRight) {
+        this.rotate(-2 * Math.PI/180)
+      }
+    } else {
+      this.rotation = 0
+      this.rotate(this.center.angleBetween(this.world.mouse))
     }
-    if (this.keys.ArrowRight) {
-      this.rotate(-2 * Math.PI/180)
-    }
+    
     if (this.keys.ArrowUp) {
       this.addForce(new Vector(0, -1))
     }
     if (this.keys.ArrowDown) {
       this.addForce(new Vector(0, 1))
-    }
-    if (this.keys.Space) {
-      this.rotation = 0
-      this.rotate(this.center.angleBetween(this.world.mouse))
     }
   }
 

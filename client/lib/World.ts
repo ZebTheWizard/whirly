@@ -7,6 +7,7 @@ export class World
     private $gameObjects: Array<GameObject>
     public canvas:any
     public mouse:Vector
+    public rotationMode:string
 
     static GetInstance() {
       if (!this.$instance) {
@@ -18,10 +19,15 @@ export class World
     constructor () {
       this.$gameObjects = []
       window.addEventListener('mousemove', this.$mouseMove.bind(this))
+      this.rotationMode = "keyboard"
+      this.mouse = new Vector(0,0)
     }
 
     private $mouseMove(e:MouseEvent) {
-      this.mouse = new Vector(e.pageX, e.pageY)
+      // console.log(this.canvas.$el.style)
+      var offset = this.canvas.$el.getBoundingClientRect()
+      console.log(offset)
+      this.mouse = new Vector(e.clientX - offset.left, e.clientY - offset.top)
     }
     
     setCanvas(canvas:any) {
@@ -37,19 +43,22 @@ export class World
           // console.log(gameObject.rotation, gameObject.x, gameObject.y)
           var xOffset = gameObject.width / -2
           var yOffset = gameObject.height / -2
-          gameObject.update()
-          ctx.clearRect(0,0, this.canvas.width, this.canvas.height)
+          
+          
           ctx.save()
+          
           ctx.translate(gameObject.canvas.value('x'), gameObject.canvas.value('y'))
           ctx.rotate(gameObject.rotation)
           gameObject.position.set(new Vector(xOffset, yOffset))
           gameObject.center.set(new Vector(gameObject.canvas.value('x') - gameObject.width / 2, gameObject.canvas.value('y') - gameObject.height / 2))
+          gameObject.clear(ctx)
           gameObject.draw(ctx)
           ctx.restore()
+          gameObject.update()
         }
         else if (gameObject.isDrawable) {
           ctx.save()
-          ctx.clearRect(0,0, this.canvas.width, this.canvas.height)
+          gameObject.clear(ctx)
           gameObject.draw(ctx)
           ctx.restore()
         }
