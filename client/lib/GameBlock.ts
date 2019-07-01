@@ -1,36 +1,29 @@
 import { GameObject } from "./GameObject";
-import { Constructor, KeyMap } from '../Interfaces'
-import {Moveable} from './Moveable'
-// Moveable.Moveable.call
-// Moveable.Moveable
+import { Drawable } from './Drawable'
+import { Vector } from "./Vector";
 
 
-export class GameBlock extends Moveable(GameObject) {
+export class GameBlock extends Drawable(GameObject) {
 
   private $color:string
-  private $x:number
-  private $y: number
-  public ismoveable:boolean
+  public x: number
+  public y: number
+  public width: number
+  public height: number
   
   constructor(x:number, y:number, color:string=null) {
     super()
-    this.$x = x
-    this.$y = y
+    this.width = 20
+    this.height = 20
+    this.canvas.set(new Vector(x,y))
     this.$color = color
   }
 
   draw (ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.$color
-    ctx.fillRect(this.$x, this.$y, 20,20)
-  }
-
-  keypress (keys:KeyMap) {
-    if (keys.ArrowLeft) {
-      this.$x -= 1
-    }
-    if (keys.ArrowRight) {
-      this.$x += 1
-    }
+    ctx.fillRect(this.position.value('x'), this.position.value('y'), this.width, this.height)
+    // ctx.fillStyle = "#000000"
+    // ctx.fillRect(this.x + this.width/2, this.y + this.height/2, 2, 2)
   }
 }
 

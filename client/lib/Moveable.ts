@@ -1,32 +1,35 @@
 import {KeyMap, Constructor} from '../Interfaces'
-import { GameObject } from './GameObject';
+import { GameBlock } from './GameBlock';
 import { Drawable } from './Drawable'
+import { Vector } from './Vector'
 
-export function Moveable (Base: Constructor<GameObject>) {
+// export function Moveable (Base: Constructor<GameBlock>) {
+export function Moveable<T extends Constructor<GameBlock>>(Base:T) {
 
-
-  abstract class MoveableTrait extends Drawable(Base) {
+  abstract class MoveableTrait extends Base {
     public isMoveable:boolean
-    private $keys:KeyMap
+    protected keys:KeyMap
 
-    constructor () {
-      super()
+    constructor (...args:any[]) {
+      super(...args)
       this.isMoveable = true
-      this.$keys = {}
+      this.keys = {}
       window.addEventListener('keydown', this.$keydown.bind(this))
       window.addEventListener('keyup', this.$keyup.bind(this))
     }
 
     private $keydown (e:KeyboardEvent) {
-      this.$keys[e.key] = true
-      this.keypress(this.$keys)
+      this.keys[e.code] = true
     }
 
     private $keyup (e:KeyboardEvent) {
-      this.$keys[e.key] = false
+      this.keys[e.code] = false
     }
 
-    abstract keypress(keys:KeyMap):void
+    public addForce(force:Vector) {
+      force.rotate(this.rotation)
+      this.canvas.add(force)
+    }
   }
 
 

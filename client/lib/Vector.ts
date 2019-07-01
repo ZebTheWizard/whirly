@@ -4,9 +4,10 @@ export class Vector {
   private z:number
   
   constructor (x:number, y:number, z:number=0) {
-    this.x = x
-    this.y = y
-    this.z = z
+    var precision = 0.00001
+    this.x = Math.abs(x) < precision ? 0 : x
+    this.y = Math.abs(y) < precision ? 0 : y
+    this.z = Math.abs(z) < precision ? 0 : z
   }
 
   mult(scalar:number) {
@@ -69,9 +70,42 @@ export class Vector {
     return this.div(this.mag())
   }
 
+  value(key:string) {
+    if (key == 'x') return this.x
+    if (key == 'y') return this.y
+    if (key == 'z') return this.z
+    throw new Error('Invalid vector value')
+  }
+
   limit(scalar:number) {
     if (this.magSq() > scalar * scalar) return this.normalize().mult(scalar)
     else return this
   }
 
+  rotate(angle:number, axis:string="z") {
+    if (axis == "z") this.set(new Vector(
+          this.x * Math.cos(angle) - this.y * Math.sin(angle),
+          this.x * Math.sin(angle) + this.y * Math.cos(angle),
+          this.z))
+    if (axis == "y") this.set(new Vector(
+          this.x * Math.cos(angle) + this.z * Math.sin(angle),
+          this.y,
+          -this.x * Math.sin(angle) + this.z * Math.cos(angle)))
+    if (axis == "x") this.set(new Vector(
+          this.x,
+          this.y * Math.cos(angle) - this.z * Math.sin(angle),
+          this.y * Math.sin(angle) + this.z * Math.cos(angle)))
+    return this
+  }
+
+  angleBetween(vector:Vector) {
+    return Math.atan2(vector.x - this.x, -(vector.y - this.y))
+  }
+
 }
+
+window.Vector = Vector
+// 1 0 0
+// 0 1 0
+// -1 0 0
+// 0 -1 0
